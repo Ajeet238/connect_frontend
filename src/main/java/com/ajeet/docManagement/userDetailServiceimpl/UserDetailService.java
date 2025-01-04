@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,9 +23,13 @@ public class UserDetailService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<User> user = userRepository.findByEmail(username);
+		Optional<User> user = userRepository.findByUsername(username);
+		if(user.isEmpty()) {
+			throw new BadCredentialsException("Invalid User");
+			
+		}
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		return new org.springframework.security.core.userdetails.User(user.get().getEmail(),user.get().getPassword(),authorities);
+		return new org.springframework.security.core.userdetails.User(user.get().getUsername(),user.get().getPassword(),authorities);
 	
 	}
 

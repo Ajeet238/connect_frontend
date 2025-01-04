@@ -3,15 +3,24 @@ package com.ajeet.docManagement.config;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -21,18 +30,30 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 public class AppConfig {
+	
+    @Autowired
+    private JwtValidator jwtValidator;
+    
 	@SuppressWarnings("removal")
 	@Bean
-
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		System.out.println("inside security filter");
         http.csrf().disable()  // Disable CSRF for simplicity (be cautious in production)
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/auth/**").permitAll()  // Allow access to all endpoints starting with /auth/
+                .requestMatchers("/auth/signup").permitAll()
+                .requestMatchers("/auth/validateToken").permitAll()
+                .requestMatchers("/auth/getToken").permitAll()// Allow access to all endpoints starting with /auth/
                 .anyRequest().authenticated()  // All other requests require authentication
-            );
+            ).addFilterBefore(jwtValidator, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+	
+	@Bean
+	public UserDetailsService userdetailsService() {
+		return new CustomUserDetailsService();
+	}
+	
 //	public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
 //		System.out.print("insidefilter");
 //		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
@@ -63,4 +84,13 @@ public class AppConfig {
 		System.out.print("passwordEncoder");
 		return new BCryptPasswordEncoder();
 	}
+	
+
+//	@Bean
+//	public AuthenticationProvider authenticationProvider() {
+//		DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+//		daoAuthenticationProvider.setUserDetailsService(userdetailsService());
+//		daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+//		return daoAuthenticationProvider;
+//	}
 }

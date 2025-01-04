@@ -6,15 +6,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthResponse {
-	private String jwt;
-	private String message;
 	
-	public String getJwt() {
-		return jwt;
-	}
-	public void setJwt(String jwt) {
-		this.jwt = jwt;
-	}
+	private String message;
 	public String getMessage() {
 		return message;
 	}
@@ -23,7 +16,7 @@ public class AuthResponse {
 	}
 	@Override
 	public String toString() {
-		return "AuthResponse [jwt=" + jwt + ", message=" + message + "]";
+		return "AuthResponse [ message=" + message + "]";
 	}
 	
 	

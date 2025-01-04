@@ -8,7 +8,7 @@ public class DocManagementApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DocManagementApplication.class, args);
-		System.out.println("Server Started");
+		System.out.println("Server Started"); 
 	}
 	
 }

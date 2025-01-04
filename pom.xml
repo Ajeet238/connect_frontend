@@ -89,18 +89,25 @@
         <artifactId>spring-boot-starter-security</artifactId>
    		 </dependency>
     
-    <!-- JWT -->
- <dependency>
+  <!-- jjwt API -->
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.12.2</version>
+</dependency>
+
+<!-- jjwt Implementation -->
+<dependency>
     <groupId>io.jsonwebtoken</groupId>
     <artifactId>jjwt-impl</artifactId>
     <version>0.12.2</version>
-    <scope>runtime</scope>
 </dependency>
+
+<!-- Jackson Integration for JSON processing -->
 <dependency>
     <groupId>io.jsonwebtoken</groupId>
     <artifactId>jjwt-jackson</artifactId>
     <version>0.12.2</version>
-    <scope>runtime</scope>
 </dependency>
 
     
@@ -115,7 +122,8 @@
     	<artifactId>ecommerce</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
     </dependency>
-    
+
+  
 	</dependencies>
 		<dependencyManagement>
 		    <dependencies>
